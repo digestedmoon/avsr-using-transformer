@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Model weights (download from Google Drive – see README)
+audio_visual/final/models/*.pt
+
+# Demo input clips (not tracked)
+audio_visual/demo_clips/
+demo_clips/
+
+# Checkpoints / training artefacts
+audio_visual/checkpoints/
+audio_visual/final/plots/
+
+# Misc
+.env
+*.log
+.cache
+.DS_Store

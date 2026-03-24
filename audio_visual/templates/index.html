@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Deep AVSR — Audio-Visual Speech Recognition. Upload a video and get an automatic transcription powered by deep learning.">
+    <title>Deep AVSR — Speech Recognition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Animated background orbs -->
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__logo">
+                <svg class="header__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+                <h1>Deep AVSR</h1>
+            </div>
+            <p class="header__subtitle">Audio-Visual Speech Recognition</p>
+            <div class="header__badges">
+                <span class="badge badge--mode" id="badge-mode">AV Mode</span>
+                <span class="badge badge--status" id="badge-status">
+                    <span class="badge__dot"></span>
+                    Loading...
+                </span>
+            </div>
+        </header>
+
+        <!-- Upload Card -->
+        <main class="card card--upload" id="upload-card">
+            <div class="upload-zone" id="upload-zone">
+                <div class="upload-zone__content">
+                    <svg class="upload-zone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <h2 class="upload-zone__title">Upload Video</h2>
+                    <p class="upload-zone__text">Drag & drop your <strong>.mp4</strong> file here, or click to browse</p>
+                    <p class="upload-zone__hint">Max ~6 seconds · Face visible · Any resolution</p>
+                </div>
+                <input type="file" id="file-input" accept=".mp4,video/mp4" hidden>
+            </div>
+
+            <!-- File preview (hidden until file selected) -->
+            <div class="file-preview" id="file-preview" style="display:none;">
+                <div class="file-preview__info">
+                    <svg class="file-preview__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="23 7 16 12 23 17 23 7"/>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                    </svg>
+                    <div>
+                        <p class="file-preview__name" id="file-name">video.mp4</p>
+                        <p class="file-preview__size" id="file-size">0 MB</p>
+                    </div>
+                </div>
+                <button class="file-preview__remove" id="file-remove" title="Remove file">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Video player preview -->
+            <div class="video-container" id="video-container" style="display:none;">
+                <video id="video-player" controls></video>
+            </div>
+
+            <!-- Transcribe button -->
+            <button class="btn btn--primary" id="transcribe-btn" disabled>
+                <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span>Transcribe</span>
+            </button>
+        </main>
+
+        <!-- Processing indicator -->
+        <div class="card card--processing" id="processing-card" style="display:none;">
+            <div class="processing">
+                <div class="processing__spinner">
+                    <div class="spinner"></div>
+                </div>
+                <h3 class="processing__title">Processing Video</h3>
+                <p class="processing__text" id="processing-text">Detecting face & preprocessing...</p>
+                <div class="processing__steps">
+                    <div class="step step--active" id="step-1">
+                        <span class="step__dot"></span>
+                        <span>Face Detection & Crop</span>
+                    </div>
+                    <div class="step" id="step-2">
+                        <span class="step__dot"></span>
+                        <span>Audio & Visual Extraction</span>
+                    </div>
+                    <div class="step" id="step-3">
+                        <span class="step__dot"></span>
+                        <span>Neural Network Inference</span>
+                    </div>
+                    <div class="step" id="step-4">
+                        <span class="step__dot"></span>
+                        <span>CTC Decoding</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Card -->
+        <div class="card card--result" id="result-card" style="display:none;">
+            <div class="result">
+                <div class="result__header">
+                    <svg class="result__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <h3>Transcription</h3>
+                </div>
+                <div class="result__box">
+                    <p class="result__text" id="result-text"></p>
+                </div>
+                <div class="result__meta">
+                    <span class="result__mode" id="result-mode">Mode: AV</span>
+                </div>
+                <button class="btn btn--secondary" id="new-upload-btn">
+                    <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                    </svg>
+                    <span>New Upload</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Error Card -->
+        <div class="card card--error" id="error-card" style="display:none;">
+            <div class="error">
+                <svg class="error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+                <h3>Error</h3>
+                <p class="error__text" id="error-text">Something went wrong.</p>
+                <button class="btn btn--secondary" id="error-retry-btn">
+                    <span>Try Again</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by <strong>Deep AVSR</strong> · PyTorch · CTC Decoding</p>
+            <p class="footer__hint">Real-time mode coming soon</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
