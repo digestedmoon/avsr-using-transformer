@@ -1,6 +1,6 @@
 # AVSR using Transformer
 
-A PyTorch implementation of the **Audio-Visual Speech Recognition** (AVSR) model based on the [Deep Audio-Visual Speech Recognition](https://arxiv.org/abs/1809.02108) paper. Uses a Transformer (TM-CTC) architecture trained on the LRS2 dataset.
+A implementation of the **Audio-Visual Speech Recognition** (AVSR) model based on the [Deep Audio-Visual Speech Recognition](https://arxiv.org/abs/1809.02108) paper. Uses a Transformer (TM-CTC) architecture trained on the LRS2 dataset.
 
 ## Project Structure
 
@@ -30,17 +30,15 @@ audio_visual/
 
 ## Model Weights
 
-The pre-trained weights are **not included** in this repo due to size. Download them from Google Drive:
-
-> **[📥 Download Weights (Google Drive)] Email me
+> Email me
 
 After downloading, place the three `.pt` files in `audio_visual/final/models/`:
 
 ```
 audio_visual/final/models/
-├── audio-visual.pt       (~226 MB)
-├── language_model.pt     (~128 MB)
-└── visual_frontend.pt    (~43 MB)
+├── audio-visual.pt    
+├── language_model.pt 
+└── visual_frontend.pt   
 ```
 
 ## Requirements
@@ -89,13 +87,10 @@ All settings are in `audio_visual/config.py`. Key options for inference:
 
 | Mode | Greedy WER | Beam+LM WER |
 |------|-----------|-------------|
-| AO   | 12.0%     | 8.2%        |
-| VO   | 56.3%     | 49.2%       |
 | AV (clean) | 10.3% | **6.8%** |
 | AV (noisy 0dB) | 29.1% | 22.1% |
 
 ## References
 
 - [Deep Audio-Visual Speech Recognition, Afouras et al. 2018](https://arxiv.org/abs/1809.02108)
-- Visual Frontend & LM weights from [Afouras T. and Chung J., Deep Lip Reading, 2018](https://github.com/afourast/deep_lip_reading)
 - CTC beam search adapted from [Harald Scheidl, CTCDecoder](https://github.com/githubharald/CTCDecoder)
